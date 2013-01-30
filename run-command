@@ -1,0 +1,55 @@
+#!/bin/sh
+# [Gedit Tool]
+# Comment=Execute a custom command and put its output in a new document
+# Name=Ultimate
+# Shortcut=F5
+# Languages=
+# Applicability=all
+# Output=output-panel
+# Input=nothing
+# Save-files=document
+
+ext=${GEDIT_CURRENT_DOCUMENT_NAME##*\.}
+case $ext in
+# ---------------------latex
+	tex)
+	if pdflatex ${GEDIT_CURRENT_DOCUMENT_NAME}
+		then
+		evince ${GEDIT_CURRENT_DOCUMENT_NAME%\.*}.pdf &
+	fi
+	;;
+	java)
+#-------------------------java
+	if javac "$GEDIT_CURRENT_DOCUMENT_PATH"
+then
+if `zenity --question --text="Compilation Successful.\n Do you want to run class "${GEDIT_CURRENT_DOCUMENT_NAME%\.*}" ?\n "$" java ${GEDIT_CURRENT_DOCUMENT_NAME%\.*}"`
+then
+	args=`zenity --entry --title="Any Arguments to give?" --text="System input shall be taken fraom a file system.in if exists. \n Enter the arguments here"`
+	cd $GEDIT_CURRENT_DOCUMENT_DIR
+	java ${GEDIT_CURRENT_DOCUMENT_NAME%\.*} $args < system.in
+fi
+fi
+#java section ends---------------------------------c
+	;;
+	c)
+	gcc ${GEDIT_CURRENT_DOCUMENT_NAME} -o ${GEDIT_CURRENT_DOCUMENT_NAME%\.*}.out
+	;;
+#cccc-----------------------------------php
+	php)
+	php $GEDIT_CURRENT_DOCUMENT_PATH > /dev/null
+	if [ $? -eq 0 ] ;
+	then
+		echo "Compiled Successfully"
+	else
+		echo $?
+	fi
+	;;
+# php------------------------------ruby
+	rb)
+		echo "Ruby file not yet supported"
+	;;
+# ruby ------------------------not yet supported				
+	*)
+		echo "The file format could not be determined."
+	;;
+esac
