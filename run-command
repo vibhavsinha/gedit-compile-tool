@@ -49,6 +49,22 @@ fi
 		echo "Ruby file not yet supported"
 	;;
 # ruby ------------------------not yet supported				
+	mll)
+		if(ocamllex ${GEDIT_CURRENT_DOCUMENT_NAME})
+			then echo "ocaml file generated"
+		fi
+	;;
+	ml)
+		if(ocamlc ${GEDIT_CURRENT_DOCUMENT_NAME})
+			then echo "ocaml file compiled"
+			${GEDIT_CURRENT_DOCUMENT_DIR}/a.out < sample.in
+		fi
+	;;
+	l)
+		if(flex ${GEDIT_CURRENT_DOCUMENT_NAME})
+			then echo "Flex code compiled to lex.yy.c"
+		fi
+	;;
 	*)
 		echo "The file format could not be determined."
 	;;
